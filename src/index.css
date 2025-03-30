@@ -1,0 +1,10 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import './styles/animation.css';
+
+body {
+  font-family: 'Raleway', sans-serif;
+  background-color: #F6F6F6;
+}

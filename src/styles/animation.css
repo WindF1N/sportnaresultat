@@ -1,0 +1,84 @@
+/* Стили для элементов перед анимацией */
+.pre-animation {
+  opacity: 0;
+  transform: translateY(20px);
+  transition-property: opacity, transform;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Базовое появление с fade и translateY */
+.animate-fade-in {
+  opacity: 1;
+  transform: translateY(0);
+  transition-duration: 800ms;
+}
+
+/* Анимация для заголовков */
+.animate-title {
+  opacity: 1;
+  transform: translateY(0);
+  transition-duration: 1000ms;
+}
+
+/* Анимация для карточек */
+.animate-card {
+  opacity: 1;
+  transform: translateY(0);
+  transition-duration: 600ms;
+}
+
+/* Анимация слева */
+.pre-animation-left {
+  opacity: 0;
+  transform: translateX(-30px);
+  transition-property: opacity, transform;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.animate-from-left {
+  opacity: 1;
+  transform: translateX(0);
+  transition-duration: 800ms;
+}
+
+/* Анимация справа */
+.pre-animation-right {
+  opacity: 0;
+  transform: translateX(30px);
+  transition-property: opacity, transform;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.animate-from-right {
+  opacity: 1;
+  transform: translateX(0);
+  transition-duration: 800ms;
+}
+
+/* Анимация появления с масштабированием */
+.pre-animation-scale {
+  opacity: 0;
+  transform: scale(0.9);
+  transition-property: opacity, transform;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.animate-scale {
+  opacity: 1;
+  transform: scale(1);
+  transition-duration: 700ms;
+}
+
+/* Анимация появления снизу */
+.pre-animation-bottom {
+  opacity: 0;
+  transform: translateY(40px);
+  transition-property: opacity, transform;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.animate-from-bottom {
+  opacity: 1;
+  transform: translateY(0);
+  transition-duration: 800ms;
+} 

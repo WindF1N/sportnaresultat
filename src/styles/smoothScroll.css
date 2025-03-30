@@ -1,0 +1,29 @@
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  overflow-x: hidden;
+}
+
+/* Стили для анимированного скролла */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 30px, 0);
+  }
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+/* Базовые анимации для всех секций */
+section {
+  will-change: transform, opacity;
+}
+
+/* Стили для анимации заголовков и подзаголовков */
+h1, h2, h3, p, button {
+  will-change: transform, opacity;
+} 
