@@ -1,5 +1,12 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react';
 import avatarImage from '../../assets/avatar.jpg';
+import { motion, AnimatePresence, Variants } from 'framer-motion';
+import { 
+  fadeIn, 
+  titleAnimation, 
+  cardAnimation, 
+  staggerContainer 
+} from '../../utils/framerAnimations';
 
 interface TestimonialItem {
   id: number;
@@ -9,6 +16,27 @@ interface TestimonialItem {
   photo: string;
   text: string;
 }
+
+// Локальное определение анимации для слайдера
+const sliderAnimation: Variants = {
+  hidden: { opacity: 0, x: '100%' },
+  visible: {
+    opacity: 1,
+    x: 0,
+    transition: {
+      type: 'spring',
+      damping: 30,
+      stiffness: 100,
+    },
+  },
+  exit: { 
+    opacity: 0, 
+    x: '-100%', 
+    transition: { 
+      ease: 'easeInOut' 
+    } 
+  },
+};
 
 const Testimonials: React.FC = () => {
   // Состояние для отслеживания текущего слайда
@@ -237,198 +265,100 @@ const Testimonials: React.FC = () => {
     <section style={{ paddingTop: '80px', paddingBottom: '80px' }}>
       <div className="max-w-[1320px] mx-auto px-4">
         {/* Заголовок */}
-        <h2 
+        <motion.h2 
           style={{
             fontFamily: 'Raleway, sans-serif',
             fontWeight: 600,
-            fontSize: '48px',
+            fontSize: isMobile ? '32px' : '48px',
             lineHeight: '100%',
             letterSpacing: '0%',
             color: '#324155',
             textAlign: 'center',
             marginBottom: '24px'
           }}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, amount: 0.3 }}
+          variants={titleAnimation}
         >
           Відшуки
-        </h2>
+        </motion.h2>
         
         {/* Подзаголовок */}
-        <p 
+        <motion.p 
           style={{
             fontFamily: 'Raleway, sans-serif',
             fontWeight: 400,
-            fontSize: '20px',
+            fontSize: isMobile ? '16px' : '20px',
             lineHeight: '125%',
             letterSpacing: '4%',
             color: '#566B86',
             textAlign: 'center',
             marginBottom: '60px'
           }}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, amount: 0.3 }}
+          variants={fadeIn}
+          transition={{ delay: 0.2 }}
         >
           Мами та жінки котрі пройшли повний курс
-        </p>
+        </motion.p>
         
         {/* Слайдер с отзывами */}
-        <div 
-          style={{ 
-            position: 'relative',
-            marginBottom: '44px',
-            overflow: 'hidden'
-          }}
+        <motion.div 
+          className="relative overflow-hidden"
+          onTouchStart={handleTouchStart}
+          onTouchEnd={handleTouchEnd}
+          ref={sliderRef}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, amount: 0.1 }}
+          variants={staggerContainer}
         >
-          {/* Контейнер слайдера с отступами для теней */}
-          <div style={{ padding: '15px 0' }}>
-            <div
-              ref={sliderRef}
-              onTouchStart={handleTouchStart}
-              onTouchEnd={handleTouchEnd}
-              style={{
-                display: 'flex',
-                transition: 'transform 0.5s ease',
-                transform: `translateX(-${currentSlide * 100}%)`
-              }}
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={currentSlide}
+              className={`flex ${isMobile ? '' : 'gap-x-11'}`}
+              initial="hidden"
+              animate="visible"
+              exit="exit"
+              variants={sliderAnimation}
             >
-              {Array.from({ length: totalSlides }).map((_, slideIndex) => {
-                const slideItems = testimonials.slice(
-                  slideIndex * (isMobile ? 1 : 3),
-                  slideIndex * (isMobile ? 1 : 3) + (isMobile ? 1 : 3)
-                );
-                
-                return (
-                  <div 
-                    key={slideIndex}
-                    style={{ 
-                      display: 'flex', 
-                      gap: '33px',
-                      minWidth: '100%',
-                      padding: '0 5px'
-                    }}
-                  >
-                    {slideItems.map((item) => (
-                      <div
-                        key={item.id}
-                        style={{
-                          flex: 1,
-                          backgroundColor: '#FEFEFE',
-                          borderRadius: '16px',
-                          padding: '24px',
-                          height: '176px',
-                          boxShadow: '0px 8px 25px 0px rgba(0, 58, 170, 0.08)',
-                          display: 'flex',
-                          flexDirection: 'column',
-                          margin: '5px'
-                        }}
-                      >
-                        {/* Верхняя часть с фото и информацией */}
-                        <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '16px' }}>
-                          <div style={{ display: 'flex', alignItems: 'center' }}>
-                            {/* Фотография */}
-                            <div
-                              style={{
-                                width: '44px',
-                                height: '44px',
-                                borderRadius: '50%',
-                                overflow: 'hidden',
-                                backgroundColor: '#f0f0f0',
-                                marginRight: '12px'
-                              }}
-                            >
-                              <img 
-                                src={item.photo} 
-                                alt={item.name}
-                                style={{
-                                  width: '100%',
-                                  height: '100%',
-                                  objectFit: 'cover'
-                                }}
-                                onError={(e) => {
-                                  const target = e.target as HTMLImageElement;
-                                  target.src = 'https://via.placeholder.com/44x44';
-                                }}
-                              />
-                            </div>
-                            
-                            {/* Имя и возраст */}
-                            <div>
-                              <p 
-                                style={{
-                                  fontFamily: 'Raleway, sans-serif',
-                                  fontWeight: 600,
-                                  fontSize: '16px',
-                                  lineHeight: '100%',
-                                  letterSpacing: '0%',
-                                  color: '#566B86',
-                                  marginBottom: '4px'
-                                }}
-                              >
-                                {item.name}
-                              </p>
-                              <p 
-                                style={{
-                                  fontFamily: 'Raleway, sans-serif',
-                                  fontWeight: 400,
-                                  fontSize: '16px',
-                                  lineHeight: '100%',
-                                  letterSpacing: '0%',
-                                  color: '#566B86'
-                                }}
-                              >
-                                {item.age}
-                              </p>
-                            </div>
-                          </div>
-                          
-                          {/* Статус */}
-                          <div 
-                            style={{
-                              backgroundColor: '#D5FF5F80',
-                              borderRadius: '12px',
-                              padding: '4px 8px',
-                              fontFamily: 'Raleway, sans-serif',
-                              fontWeight: 500,
-                              fontSize: '14px',
-                              lineHeight: '100%',
-                              letterSpacing: '0%',
-                              color: '#718F1B',
-                              height: 'fit-content'
-                            }}
-                          >
-                            {item.status}
-                          </div>
-                        </div>
-                        
-                        {/* Текст отзыва */}
-                        <p 
-                          style={{
-                            fontFamily: 'Raleway, sans-serif',
-                            fontWeight: 400,
-                            fontSize: '16px',
-                            lineHeight: '125%',
-                            color: '#566B86',
-                            overflow: 'hidden',
-                            textOverflow: 'ellipsis',
-                            display: '-webkit-box',
-                            WebkitLineClamp: 4,
-                            WebkitBoxOrient: 'vertical'
-                          }}
-                        >
-                          {item.text}
-                        </p>
-                      </div>
-                    ))}
+              {getCurrentSlideItems().map((testimonial, index) => (
+                <motion.div 
+                  key={testimonial.id}
+                  className={`bg-white p-6 rounded-3xl ${isMobile ? 'w-full flex-shrink-0' : 'flex-1'}`}
+                  style={{ 
+                    boxShadow: '0px 10px 21px 0px #6A7D9E0D, 0px 39px 39px 0px #6A7D9E0A, 0px 87px 52px 0px #6A7D9E08, 0px 155px 62px 0px #6A7D9E03, 0px 242px 68px 0px #6A7D9E00',
+                    width: isMobile ? '100%' : undefined,
+                    flex: isMobile ? '0 0 auto' : '1',
+                  }}
+                  variants={cardAnimation}
+                  custom={index}
+                  whileHover={{ y: -5, transition: { duration: 0.2 } }}
+                >
+                  <div className="flex items-center mb-4">
+                    <img src={testimonial.photo} alt={testimonial.name} className="w-12 h-12 rounded-full mr-4" />
+                    <div>
+                      <h3 className="font-semibold text-base text-[#324155]">{testimonial.name}</h3>
+                      <p className="text-sm text-[#566B86]">{testimonial.age}, {testimonial.status}</p>
+                    </div>
                   </div>
-                );
-              })}
-            </div>
-          </div>
-        </div>
-        
-        {/* Навигация слайдера */}
+                  <p className="text-base text-[#566B86]">{testimonial.text}</p>
+                </motion.div>
+              ))}
+            </motion.div>
+          </AnimatePresence>
+        </motion.div>
+
+        {/* Навигация (точки/полоски) */}
         <div 
           style={{ 
             display: 'flex', 
             justifyContent: 'center', 
-            gap: '8px' 
+            gap: '8px', 
+            marginTop: '40px'
           }}
         >
           {Array.from({ length: totalSlides }).map((_, index) => (
@@ -437,7 +367,7 @@ const Testimonials: React.FC = () => {
               onClick={() => goToSlide(index)}
               style={{
                 position: 'relative',
-                width: '40px',
+                width: isMobile ? '20px' : '40px', // Уменьшаем ширину на мобильных еще больше
                 height: '4px',
                 backgroundColor: '#DEE3E9',
                 borderRadius: '2px',
